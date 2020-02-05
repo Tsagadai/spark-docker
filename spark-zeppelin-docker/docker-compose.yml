@@ -2,19 +2,19 @@ version: '2'
 services: 
   zeppelin:
     build: .
-    image: anchormen/zeppelin
+    image: tsagadai/zeppelin
     container_name: zeppelin
     environment:
       ZEPPELIN_PORT: 8090
       ZEPPELIN_JAVA_OPTS: >-
-        -Dspark.driver.memory=1g
-        -Dspark.executor.memory=2g
+        -Dspark.driver.memory=5g
+        -Dspark.executor.memory=20g
       MASTER: "spark://master:7077"
     ports:
       - 8090:8090
     volumes:
-      - ./data:/zeppelin/data
-      - ./notebook:/zeppelin/notebook
+      - ./data/:/zeppelin/data
+      - ./notebooks/:/zeppelin/notebook
       - ./logs:/zeppelin/logs
 
 networks:

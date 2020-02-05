@@ -1,28 +1,20 @@
 # the base image is a trusted java build (https://registry.hub.docker.com/_/java/)
 # FROM java:8
 
-# MAINTAINER m.sioufy@anchormen.nl
-
 FROM ubuntu:18.04
 
+ENV SPARK_VERSION 2.3.4
+ENV HADOOP_PROFILE 2.7
 
-MAINTAINER m.sioufy@anchormen.nl
-
-#&&  apt-get install software-properties-common -y \
-#&&  apt-add-repository ppa:webupd8team/java -y \
-#&&  apt-get update -y \
+MAINTAINER chris@scut.tl
 
 ####installing [software-properties-common] so that we can use [apt-add-repository] to install Java8
-RUN apt-get update -y \
-&&  apt-get install wget -y \
-&&  apt-get install openjdk-8-jdk-headless -y \
-&&  apt-get install supervisor -y
+RUN apt-get update -y && \
+apt-get install wget openjdk-8-jdk-headless supervisor -y
 
 
 ####downloading & unpacking Spark 2.2.1 [prebuilt for Hadoop 2.6+ and scala 2.10]
-RUN wget http://apache.mirror.triple-it.nl/spark/spark-2.2.1/spark-2.2.1-bin-hadoop2.7.tgz \
-&&  tar -xzf spark-2.2.1-bin-hadoop2.7.tgz \
-&&  mv spark-2.2.1-bin-hadoop2.7 /opt/spark
+RUN mkdir -p /opt/spark && wget -O - -nc https://www.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_PROFILE}.tgz | tar -xz -C /opt/spark
 
 
 #####adding conf files [to be used by supervisord for running spark master/slave]
